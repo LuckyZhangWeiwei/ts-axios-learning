@@ -1,4 +1,5 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
+import { parseHeaders } from './helpers/headers'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
@@ -11,15 +12,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       request.responseType = responseType
     }
   
-    request.open(
-      method.toUpperCase(),
-      url,
-      true
-    )
+    request.open(method.toUpperCase(), url, true)
 
     request.onreadystatechange = function handleLoad() {
       if (request.readyState !== 4) {
-        // 4 为正确接受的状态
+        // 4 为正确接受的状态 下载操作已完成
         return
       }
       const responseHeaders = request.getAllResponseHeaders()
@@ -29,7 +26,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         data: responseData,
         status: request.status,
         statusText: request.statusText,
-        headers: responseHeaders,
+        headers: parseHeaders(responseHeaders),
         config,
         request
       }
@@ -46,5 +43,4 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   
     request.send(data)
   })
-
 }
