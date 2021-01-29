@@ -64,8 +64,6 @@ export default class Axios {
       const { resolved, rejected } = chain.shift()!
       promise = promise.then(resolved, rejected)
     }
-
-    // return dispatchRequest(config)
     return promise
   }
 

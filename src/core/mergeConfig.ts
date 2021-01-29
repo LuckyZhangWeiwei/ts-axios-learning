@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from "../types";
 
 const strategy = Object.create(null)
 
-const strategyKeysFromVal2 = ['url', 'params', 'data']
+const strategyKeysFromVal2 = ['url', 'params', 'data', 'timeout']
 
 strategyKeysFromVal2.forEach(key => {
   strategy[key] = fromVal2Strategy
@@ -15,26 +15,26 @@ strateKeysDeepMerge.forEach(key => {
   strategy[key] = deepMergeStrategy
 })
 
-function defaultStrategy(val1: any, val2: any):any {
+function defaultStrategy(val1: any, val2: any): any {
   return typeof val2 !== undefined ? val2 : val1
 }
 
-function fromVal2Strategy(val1: any, val2: any):any {
+function fromVal2Strategy(val1: any, val2: any): any {
   if (typeof val2 !== undefined) {
     return val2
   }
 }
 
-function deepMergeStrategy(val1: any, val2: any):any {
+function deepMergeStrategy(val1: any, val2: any): any {
   if (isPlainObject(val2)) {
     return deepMerge(val1, val2)
-  } else if (typeof val2 !== undefined) {
+  } else if (typeof val2 !== "undefined") {
     // val2有值，但不是一个对象
     return val2
   } else if (isPlainObject(val1)) {
     // val2 没有值
     return deepMerge(val1)
-  } else if (typeof val1 !== undefined) {
+  } else if (typeof val1 !== "undefined") {
     // val1有值，但不是一个对象
     return val1
   }
@@ -63,8 +63,6 @@ export default function mergeConfig (
     const strat = strategy[key] || defaultStrategy
     config[key] = strat(config1[key], config2![key])
   }
-
-  console.log('config:', config)
 
   return config
 }
