@@ -16,11 +16,11 @@ strateKeysDeepMerge.forEach(key => {
 })
 
 function defaultStrategy(val1: any, val2: any): any {
-  return typeof val2 !== undefined ? val2 : val1
+  return typeof val2 !== "undefined" ? val2 : val1
 }
 
 function fromVal2Strategy(val1: any, val2: any): any {
-  if (typeof val2 !== undefined) {
+  if (typeof val2 !== "undefined") {
     return val2
   }
 }
