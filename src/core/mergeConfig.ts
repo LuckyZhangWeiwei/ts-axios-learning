@@ -29,17 +29,20 @@ function deepMergeStrategy(val1: any, val2: any):any {
   if (isPlainObject(val2)) {
     return deepMerge(val1, val2)
   } else if (typeof val2 !== undefined) {
+    // val2有值，但不是一个对象
     return val2
   } else if (isPlainObject(val1)) {
+    // val2 没有值
     return deepMerge(val1)
   } else if (typeof val1 !== undefined) {
+    // val1有值，但不是一个对象
     return val1
   }
 }
 
 export default function mergeConfig (
         config1: AxiosRequestConfig, 
-        config2: AxiosRequestConfig): AxiosRequestConfig {
+        config2?: AxiosRequestConfig): AxiosRequestConfig {
   if (!config2) {
     config2 = {}
   }
@@ -58,8 +61,10 @@ export default function mergeConfig (
 
   function _mergeField(key: string): void {
     const strat = strategy[key] || defaultStrategy
-    config[key] = strat(config1[key], config2[key])
+    config[key] = strat(config1[key], config2![key])
   }
+
+  console.log('config:', config)
 
   return config
 }

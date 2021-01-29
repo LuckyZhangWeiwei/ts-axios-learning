@@ -57,6 +57,6 @@ export function flattenHeaders(headers: any, method: Method): any {
   methodsToDelete.forEach(method => {
     delete headers[method]
   })
-  
+  console.log('headers:', headers)
   return headers
 }
