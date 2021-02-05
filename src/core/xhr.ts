@@ -12,7 +12,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       headers, 
       responseType, 
       timeout,
-      cancelToken 
+      cancelToken,
+      withCredentials
     } = config
 
     const request = new XMLHttpRequest()
@@ -24,6 +25,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     if (!!timeout) {
       request.timeout = timeout
     }
+
+    // 跨域请求时，通过设置这个属性，来使请求带上所要请求的域下的cookie
+    if (!!withCredentials) {
+      request.withCredentials = withCredentials;
+  }
   
     request.open(method.toUpperCase(), url!, true)
 
