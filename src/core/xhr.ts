@@ -1,6 +1,8 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
@@ -13,7 +15,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       responseType, 
       timeout,
       cancelToken,
-      withCredentials
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
 
     const request = new XMLHttpRequest()
@@ -68,6 +72,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     request.ontimeout = function handleTimeout() {
       const error = createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request)
       reject(error)
+    }
+
+    if ((withCredentials || isURLSameOrigin(url!)) && !!xsrfCookieName) {
+      const xsrValue = cookie.read(xsrfCookieName)
+      if (!!xsrValue && !!xsrfHeaderName) {
+        headers[xsrfHeaderName] = xsrValue
+      }
     }
   
     Object.keys(headers).forEach(name => {
