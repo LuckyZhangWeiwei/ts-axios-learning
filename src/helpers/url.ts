@@ -64,6 +64,20 @@ export function buildURL(
   return url
 }
 
+export function isAbsoluteURL(url: string): boolean {
+  // 正则含义：
+  // 绝对地址的url，以类似'http:'或'https:'开头，后面跟两个斜线'//'；也可以直接两个斜线开头
+  // 正则匹配字母开头，后面可以是0个或多个字母、数字、加号'+'、减号'-'、点号'.'，再跟冒号':'。这部分可能有也可能没有，所以跟问号表示0或1个
+  // 斜线需要转义
+  // 需要忽略大小写，正则表达式跟i标识符
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+}
+
+export function combineURL(baseURL: string, relativeURL?: string): string {
+  // 拼接时，删除baseURL末尾的斜线'/'，以及relativeURL开头的斜线'/'，两个再以斜线'/'拼接
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL;
+}
+
 export function isURLSameOrigin(requestURL: string): boolean {
   const parsedOrigin = _resolveURL(requestURL)
   return (parsedOrigin.protocol === currentOrigin.protocol) 
